@@ -223,7 +223,7 @@ h3 { font-size: 1.125rem; }
 .page { padding: 3rem 0 4rem; }
 .page h1 { font-size: clamp(1.9rem, 6vw, 2.75rem); }
 .page h2 { font-size: 1.375rem; margin-top: 2.25rem; max-width: none; }
-.prose { max-width: 44rem; }
+.prose > * { max-width: 44rem; }
 .prose ul { padding-left: 1.25rem; }
 .prose .btn { margin-top: 1.5rem; }
 
