@@ -145,3 +145,53 @@ GATE: FAIL (0 compliance, 18 placeholder)
 ```
 
 The only failures are the placeholder hits, as intended.
+
+---
+
+## Follow-up 2026-09-29
+
+Decisions from `XRAY-SITE-FOLLOWUP-BRIEF-v1.md`, applied item by item. No remote, nothing pushed. Commit hashes are as of this writing.
+
+1. **Port check. Done (`a4d05a8`, `2e8b08b`).** I read `alberta-self-employed/index.html` and `alberta-privacy/index.html` in `~/Desktop/fishercapital-site` (branch `codex/alberta-prelaunch`) read-only. Where ours had drifted from the source's substance, the source's substance now appears in our voice and structure:
+   - **FAQ:**
+     - Q1 now covers how income is documented and says private financing is considered only where appropriate.
+     - Q2 now covers suitability and the property and other obligations, and says a review "does not promise a specific product".
+     - Q3 now lists what to look at: total cost, payments, term, renewal and early repayment. It adds that a planned refinance or sale can be delayed or fall through.
+     - Q5 now adds account details, identity documents, text messages and the brokerage's secure process.
+   - **Privacy notice:**
+     - The notice now covers follow-up records, no automated credit or product decision, and contact by phone, email or text, with STOP and a note that withdrawing consent may end the enquiry.
+     - It now also covers provider responsibility and access limits, access by courts or authorities abroad, the brokerage's rules once an enquiry becomes an application, identity checks and legal limits on requests, and complaints to the brokerage.
+   - **Not ported:**
+     - Every mention of the old brand, its email address, Ontario, FSRA and "Mortgage Commitment".
+     - The source's named providers (Meta lead forms, Make, Zoho, Google Workspace). Our enquiry path is Tally and Calendly, and the source itself says its provider list is unverified.
+     - The source's broker-review notes, its bracketed brokerage-address and privacy-officer placeholders, and its "Changes" section. Ours has no equivalent section, so adding one would be new copy for the broker to approve.
+     - "property values, mortgage balances" in the do-not-send list, because the X-Ray call may cover them.
+2. **FAQ wording. Done (`a4d05a8`).**
+   - Q1 now ends "any private option is set out with its full costs in writing first".
+   - Q3 no longer says "It is a bridge".
+   - In Q2, "which may mean the current term does not need to be broken" is replaced with "depending on your existing mortgage terms".
+   - Q4 is unchanged ("only with your consent").
+3. **Privacy notice. Done (`2e8b08b`).**
+   - "is licensed with Centum" now reads "is a mortgage associate with Centum Financial Services Limited Partnership".
+   - The service-providers section, which covers providers outside Canada, and the access-and-correction section both name "Raymond. F, [XRAY_EMAIL], (416) 898-0181" as the contact.
+   - This adds one `[XRAY_EMAIL]`, so there are now 19 placeholders.
+4. **Footer. No change.** The privacy link stays.
+5. **Commit author. Half done, and the rest is waiting on Ray.**
+   - Done: the repo-local identity is set (`user.email raymond@xraymortgages.ca`, `user.name "Raymond. F"`), and every commit from this follow-up carries it.
+   - Not done: rewriting the 16 earlier commits. My permission layer blocked the history rewrite as a destructive git action, so I stopped there.
+   - Current state: the author check shows two lines, 16 x `Raymond F` on the other brand's domain and the follow-up commits as `Raymond. F <raymond@xraymortgages.ca>`.
+   - Ray decides whether to run the rewrite himself before the first push. A backup bundle of the history before the rewrite was saved in the session scratchpad. After a rewrite, every hash in this file changes.
+6. **Phone. No change.** (416) 898-0181 stays. Note for the PB pack: it is the number on every other brand asset, and it is a Toronto area code on Alberta-only material.
+7. **Go-live gate. Done (`15a1fd7`, `451c8df`).**
+   - What the flag does: `tests/gate.mjs --go-live` also fails if any page still has the draft banner or a noindex meta, if the privacy page still has "Draft for principal broker review", or if `robots.txt` still has `Disallow: /`. Every unfilled placeholder becomes a compliance failure. Without the flag, the gate behaves as before.
+   - How to run it: `npm run gate:go-live` runs the self-test and then the go-live gate. On today's draft it reports 29 failures: 19 placeholders, 4 banners, 4 noindex metas, 1 draft line and robots.txt.
+   - Tests: the self-test grew from 47 to 59 cases. Ten are go-live cases: the draft fails; a filled-in draft still fails; a release-ready site passes with and without the flag; each leftover fails on its own; and the email written as a `mailto:` link passes. The other two show that `creative/` is excluded from the gate.
+   - `REPORT.md`'s go-live checklist now includes removing the privacy draft line, and ends with `npm run gate:go-live`.
+8. **Email link. Checklist only (`451c8df`).** Go-live checklist step 2: every filled-in email becomes a `mailto:` link whose visible text is exactly the address. It covers the footer on all four pages and the two privacy contact lines. The gate accepts the linked form, as the self-test case shows. It does not require the link, so that one is checked by eye.
+
+`npm test` after Part 1: self-test 57/57 and compliance rules all passed. The only failures were the 19 placeholders. After Part 2, the self-test is 59/59 with the same result.
+
+**Also in this follow-up:**
+- Part 2 built the ad frames. See `creative/REPORT.md`: 9 of 9 frames pass, `[PENDING]` x9 is reported as the expected placeholder, and the negative test catches 33 of 33 breaks.
+- `aeda313` moved the gate's banned-phrase, brand and dash rules into `tests/rules.mjs`, unchanged, so the site gate and the frame checks share one list.
+- `a9f988e` excluded `creative/` from Pages and from the gate.
