@@ -1,7 +1,10 @@
 # GitHub Pages: keep repo tooling and notes out of the published site.
+# Pages renders .md files without front matter, so exclude all of them.
 exclude:
+  - "*.md"
   - REPORT.md
   - README.md
+  - REVIEW-GSTACK-2026-09-29.md
   - tests
   - package.json
   - node_modules
