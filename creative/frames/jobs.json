@@ -1,0 +1,101 @@
+[
+  {
+    "base": "a1-sq-1080x1080",
+    "angle": "a1",
+    "size": "sq",
+    "w": 1080,
+    "h": 1080,
+    "safeTop": 0,
+    "safeBottom": 0,
+    "hook": "See your renewal clearly before you sign.",
+    "sub": "A plain-language mortgage review for Alberta homeowners."
+  },
+  {
+    "base": "a1-pt-1080x1350",
+    "angle": "a1",
+    "size": "pt",
+    "w": 1080,
+    "h": 1350,
+    "safeTop": 0,
+    "safeBottom": 0,
+    "hook": "See your renewal clearly before you sign.",
+    "sub": "A plain-language mortgage review for Alberta homeowners."
+  },
+  {
+    "base": "a1-st-1080x1920",
+    "angle": "a1",
+    "size": "st",
+    "w": 1080,
+    "h": 1920,
+    "safeTop": 250,
+    "safeBottom": 250,
+    "hook": "See your renewal clearly before you sign.",
+    "sub": "A plain-language mortgage review for Alberta homeowners."
+  },
+  {
+    "base": "a2-sq-1080x1080",
+    "angle": "a2",
+    "size": "sq",
+    "w": 1080,
+    "h": 1080,
+    "safeTop": 0,
+    "safeBottom": 0,
+    "hook": "Write-offs can lower the income a lender sees.",
+    "sub": "Self-employed mortgage reviews for Alberta."
+  },
+  {
+    "base": "a2-pt-1080x1350",
+    "angle": "a2",
+    "size": "pt",
+    "w": 1080,
+    "h": 1350,
+    "safeTop": 0,
+    "safeBottom": 0,
+    "hook": "Write-offs can lower the income a lender sees.",
+    "sub": "Self-employed mortgage reviews for Alberta."
+  },
+  {
+    "base": "a2-st-1080x1920",
+    "angle": "a2",
+    "size": "st",
+    "w": 1080,
+    "h": 1920,
+    "safeTop": 250,
+    "safeBottom": 250,
+    "hook": "Write-offs can lower the income a lender sees.",
+    "sub": "Self-employed mortgage reviews for Alberta."
+  },
+  {
+    "base": "a3-sq-1080x1080",
+    "angle": "a3",
+    "size": "sq",
+    "w": 1080,
+    "h": 1080,
+    "safeTop": 0,
+    "safeBottom": 0,
+    "hook": "A decline is a data point, not a verdict.",
+    "sub": "Mortgage reviews for Alberta files that stalled."
+  },
+  {
+    "base": "a3-pt-1080x1350",
+    "angle": "a3",
+    "size": "pt",
+    "w": 1080,
+    "h": 1350,
+    "safeTop": 0,
+    "safeBottom": 0,
+    "hook": "A decline is a data point, not a verdict.",
+    "sub": "Mortgage reviews for Alberta files that stalled."
+  },
+  {
+    "base": "a3-st-1080x1920",
+    "angle": "a3",
+    "size": "st",
+    "w": 1080,
+    "h": 1920,
+    "safeTop": 250,
+    "safeBottom": 250,
+    "hook": "A decline is a data point, not a verdict.",
+    "sub": "Mortgage reviews for Alberta files that stalled."
+  }
+]
