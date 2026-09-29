@@ -249,3 +249,6 @@ h3 { font-size: 1.125rem; }
 @media (prefers-reduced-motion: reduce) {
   * { scroll-behavior: auto !important; transition: none !important; }
 }
+
+/* Eyebrow on the light page needs the darker accent for contrast */
+.page .eyebrow { color: var(--teal-ink); }
