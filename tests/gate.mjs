@@ -8,13 +8,19 @@
 // (comments and tags removed, entities decoded, soft hyphens and zero-width
 // characters dropped, whitespace collapsed) that defeats markup tricks.
 //
-// Usage: node tests/gate.mjs [root]   (root defaults to the repo root)
+// Usage: node tests/gate.mjs [root] [--go-live]   (root defaults to the repo root)
+//
+// --go-live adds the release rules: the draft banner, any noindex meta, the
+// privacy page's draft line and `Disallow: /` in robots.txt must all be gone,
+// and any unfilled placeholder counts as a compliance failure.
 
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, relative, dirname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const ROOT = process.argv[2] ?? join(dirname(fileURLToPath(import.meta.url)), '..');
+const ARGS = process.argv.slice(2);
+const GO_LIVE = ARGS.includes('--go-live');
+const ROOT = ARGS.find((a) => !a.startsWith('--')) ?? join(dirname(fileURLToPath(import.meta.url)), '..');
 
 const BROKERAGE = 'Centum Financial Services Limited Partnership';
 // The licence number is `[PENDING]` until go-live, then a real value.
@@ -28,6 +34,7 @@ const DISCLOSURE = new RegExp(
 const CONTACT_LINE = /\(416\) 898-0181 \| (?:\[XRAY_EMAIL\]|[^\s@|]+@[^\s|]+) \| www\.xraymortgages\.ca/;
 const HEADER_TEXT = new RegExp(`^${BROKERAGE} ${ASSOCIATE} X-RAY MORTGAGES$`);
 const BANNER = 'PRINCIPAL BROKER REVIEW \u00B7 RECA licence pending';
+const DRAFT_LINE = 'Draft for principal broker review';
 const REQUIRED_PAGES = ['index.html', 'privacy/index.html', 'thank-you/index.html', '404.html'];
 
 // Case-insensitive banned phrases (voice and compliance).
@@ -189,6 +196,7 @@ const failures = [];
 const placeholders = [];
 
 if (robotsTxt === null) failures.push('robots.txt  missing (cannot tell whether noindex is required)');
+if (GO_LIVE && robotsDisallowAll) failures.push('robots.txt  go-live: still has `Disallow: /`');
 if (htmlFiles.length === 0) failures.push('no shipped HTML files found');
 for (const page of REQUIRED_PAGES) {
   if (!existsSync(join(ROOT, page))) failures.push(`${page}  required page missing`);
@@ -330,9 +338,24 @@ for (const file of shipped) {
       fail(`missing draft banner "${BANNER}" above the header while robots.txt disallows`);
     }
   }
+
+  // Go-live: nothing from the broker-review draft may remain.
+  if (GO_LIVE) {
+    const liveText = flatten(live);
+    if (/<aside\b[^>]*class\s*=\s*["']?banner\b/i.test(live) || flatten(stripTags(live)).includes(BANNER)) {
+      fail('go-live: draft banner still present');
+    }
+    if (robotsMetas.some((m) => /noindex/i.test(m))) fail('go-live: noindex meta still present');
+    const draftAt = liveText.toLowerCase().indexOf(DRAFT_LINE.toLowerCase());
+    if (draftAt !== -1) fail(`go-live: draft line "${DRAFT_LINE}" still present`);
+  }
 }
 
-console.log(`Compliance gate: ${htmlFiles.length} HTML files checked (${shipped.length} shipped files scanned)`);
+if (GO_LIVE) {
+  for (const p of placeholders) failures.push(`${p.split('  ')[0]}  go-live: unfilled placeholder ${p.split('  ')[1]}`);
+}
+
+console.log(`Compliance gate${GO_LIVE ? ' (--go-live)' : ''}: ${htmlFiles.length} HTML files checked (${shipped.length} shipped files scanned)`);
 console.log(`robots.txt disallows all: ${robotsDisallowAll ? 'yes (noindex required)' : robotsTxt === null ? 'missing' : 'no'}`);
 console.log('');
 

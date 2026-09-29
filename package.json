@@ -4,6 +4,7 @@
   "private": true,
   "description": "Static landing site for X-Ray Mortgages (Alberta).",
   "scripts": {
-    "test": "node tests/gate-selftest.mjs && node tests/gate.mjs"
+    "test": "node tests/gate-selftest.mjs && node tests/gate.mjs",
+    "gate:go-live": "node tests/gate-selftest.mjs && node tests/gate.mjs --go-live"
   }
 }

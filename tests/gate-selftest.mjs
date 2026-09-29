@@ -32,7 +32,18 @@ const add = (file, content) => (dir) => {
 const onIndex = (fn) => edit('index.html', fn);
 const lede = 'No documents to start.'; // body only, not in the meta description
 
-// [name, mutation, expected] where expected is 'compliance', 'placeholder' or 'pass'.
+// A site ready for go-live: placeholders filled, draft banner, noindex and the
+// privacy draft line removed, robots.txt allowing crawling.
+const releaseReady = (d) => {
+  PAGES.forEach((f) => edit(f, (s) => FILLED(s)
+    .replace(/\s*<meta name="robots"[^>]*>/, '')
+    .replace(/\s*<aside class="banner"[\s\S]*?<\/aside>/, '')
+    .replace('Draft for principal broker review. ', ''))(d));
+  edit('robots.txt', () => 'User-agent: *\nAllow: /\n')(d);
+};
+const GO_LIVE = ['--go-live'];
+
+// [name, mutation, expected, gate flags] where expected is 'compliance', 'placeholder' or 'pass'.
 const CASES = [
   ['clean repo fails on placeholders only', () => {}, 'placeholder'],
   ['filled-in site passes', (d) => PAGES.forEach((f) => edit(f, FILLED)(d)), 'pass'],
@@ -82,20 +93,31 @@ const CASES = [
   ['draft banner removed', onIndex((s) => s.replace(/<aside class="banner"[\s\S]*?<\/aside>/, '')), 'compliance'],
   ['encoded placeholder bracket', (d) => PAGES.forEach((f) => edit(f, (s) => FILLED(s).replace('https://tally.so/r/abc', '&#91;TALLY_XRAY&#93;'))(d)), 'placeholder'],
   ['unbracketed placeholder', (d) => PAGES.forEach((f) => edit(f, (s) => FILLED(s).replace('https://calendly.com/x', 'CALENDLY_XRAY'))(d)), 'placeholder'],
+  // --go-live
+  ['go-live: draft repo fails', () => {}, 'compliance', GO_LIVE],
+  ['go-live: filled-in draft still fails', (d) => PAGES.forEach((f) => edit(f, FILLED)(d)), 'compliance', GO_LIVE],
+  ['go-live: release-ready site passes', releaseReady, 'pass', GO_LIVE],
+  ['release-ready site also passes without the flag', releaseReady, 'pass'],
+  ['go-live: draft banner left on one page', (d) => { releaseReady(d); edit('404.html', (s) => s.replace('<header', '<aside class="banner" aria-label="Draft notice">PRINCIPAL BROKER REVIEW \u00B7 RECA licence pending</aside>\n  <header'))(d); }, 'compliance', GO_LIVE],
+  ['go-live: noindex left on one page', (d) => { releaseReady(d); edit('thank-you/index.html', (s) => s.replace('</head>', '<meta name="robots" content="noindex,nofollow">\n</head>'))(d); }, 'compliance', GO_LIVE],
+  ['go-live: privacy draft line left', (d) => { releaseReady(d); edit('privacy/index.html', (s) => s.replace('Last updated:', 'Draft for principal broker review. Last updated:'))(d); }, 'compliance', GO_LIVE],
+  ['go-live: robots.txt still disallows', (d) => { releaseReady(d); edit('robots.txt', () => 'User-agent: *\nDisallow: /\n')(d); }, 'compliance', GO_LIVE],
+  ['go-live: email as mailto links passes', (d) => { releaseReady(d); PAGES.forEach((f) => edit(f, (s) => s.replaceAll('ray@xraymortgages.ca', '<a href="mailto:ray@xraymortgages.ca">ray@xraymortgages.ca</a>'))(d)); }, 'pass', GO_LIVE],
+  ['go-live: one placeholder left', (d) => { releaseReady(d); edit('index.html', (s) => s.replace('https://tally.so/r/abc', '[TALLY_XRAY]'))(d); }, 'compliance', GO_LIVE],
 ];
 
-function runGate(dir) {
-  const r = spawnSync(process.execPath, [GATE, dir], { encoding: 'utf8' });
+function runGate(dir, flags = []) {
+  const r = spawnSync(process.execPath, [GATE, dir, ...flags], { encoding: 'utf8' });
   const m = r.stdout.match(/GATE: FAIL \((\d+) compliance, (\d+) placeholder\)/);
   return { code: r.status, compliance: m ? +m[1] : 0, placeholder: m ? +m[2] : 0, out: r.stdout };
 }
 
 let bad = 0;
-for (const [name, mutate, expected] of CASES) {
+for (const [name, mutate, expected, flags] of CASES) {
   const dir = mkdtempSync(join(tmpdir(), 'xray-gate-'));
   for (const f of SITE) cpSync(join(ROOT, f), join(dir, f), { recursive: true });
   mutate(dir);
-  const r = runGate(dir);
+  const r = runGate(dir, flags);
   rmSync(dir, { recursive: true, force: true });
   const ok =
     expected === 'pass' ? r.code === 0
