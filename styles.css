@@ -1,0 +1,251 @@
+/* X-Ray Mortgages. Plain CSS, system fonts, mobile first. */
+
+:root {
+  --slate: #0F1720;
+  --page: #F4F6F8;
+  --grey: #9AA5B1;        /* secondary text on slate only (7:1) */
+  --grey-ink: #4A5561;    /* secondary text on the light page (7:1) */
+  --teal: #19B3A6;        /* accent: CTA fill, rules, numbers on slate */
+  --teal-ink: #0B7A71;    /* accent as text on the light page (4.8:1) */
+  --line: #D5DBE1;
+  --white: #FFFFFF;
+  --max: 68rem;
+  --gutter: 16px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--slate);
+  font-family: var(--font);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  overflow-wrap: break-word;
+}
+
+a { color: var(--teal-ink); text-underline-offset: 0.18em; }
+a:hover { color: var(--slate); }
+
+:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 3px;
+}
+.on-slate :focus-visible, .banner :focus-visible { outline-color: var(--white); }
+
+.wrap {
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--gutter);
+  top: -100px;
+  z-index: 10;
+  padding: 0.6rem 1rem;
+  background: var(--white);
+  color: var(--slate);
+  font-weight: 700;
+}
+.skip-link:focus { top: var(--gutter); }
+
+/* Draft banner */
+.banner {
+  background: var(--slate);
+  color: var(--page);
+  text-align: center;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 0.5rem var(--gutter);
+}
+
+/* Header: brokerage first and largest */
+.site-header {
+  background: var(--white);
+  border-bottom: 1px solid var(--line);
+  padding: 1rem 0;
+}
+.site-header .brokerage {
+  margin: 0;
+  font-size: 1.1875rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.site-header .associate {
+  margin: 0.15rem 0 0.4rem;
+  font-size: 0.9375rem;
+  color: var(--grey-ink);
+}
+.wordmark {
+  display: inline-block;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-decoration: none;
+  color: var(--slate);
+}
+.wordmark .x { color: var(--teal-ink); }
+.on-slate .wordmark, .on-slate .wordmark .x { color: var(--teal); }
+
+/* Scan line: the only decorative element */
+.scan {
+  height: 2px;
+  border: 0;
+  margin: 0;
+  background: linear-gradient(90deg, transparent, var(--teal) 20%, var(--teal) 80%, transparent);
+}
+
+/* Sections */
+section { padding: 3.5rem 0; }
+section + section { border-top: 1px solid var(--line); }
+
+.on-slate {
+  background: var(--slate);
+  color: var(--page);
+}
+.on-slate a { color: var(--teal); }
+.on-slate a:hover { color: var(--white); }
+.on-slate .muted { color: var(--grey); }
+
+h1, h2, h3 { line-height: 1.15; margin: 0 0 1rem; }
+h1 { font-size: clamp(2.1rem, 7vw, 3.5rem); letter-spacing: -0.02em; max-width: 18ch; }
+h2 { font-size: clamp(1.6rem, 4.5vw, 2.25rem); letter-spacing: -0.01em; max-width: 26ch; }
+h3 { font-size: 1.125rem; }
+
+.eyebrow {
+  margin: 0 0 1rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--teal);
+}
+.lede { font-size: 1.1875rem; max-width: 40rem; margin: 0 0 2rem; }
+.muted { color: var(--grey-ink); }
+.small { font-size: 0.9375rem; }
+
+.hero { padding: 4rem 0 3.5rem; }
+
+/* Buttons */
+.btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 1rem 1.5rem;
+  background: var(--teal);
+  color: var(--slate);
+  font-weight: 800;
+  font-size: 1.0625rem;
+  text-decoration: none;
+  border: 2px solid var(--teal);
+  border-radius: 4px;
+}
+.btn:hover { background: var(--white); color: var(--slate); border-color: var(--white); }
+.on-slate .btn, .on-slate .btn:hover { color: var(--slate); }
+.btn + .small { margin-top: 0.75rem; }
+
+.page .btn:hover { border-color: var(--slate); }
+
+/* Cards and lists */
+.grid { display: grid; gap: 1rem; margin-top: 2rem; }
+.card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--teal);
+  border-radius: 4px;
+  padding: 1.5rem;
+}
+.card p { margin: 0; }
+
+.covers {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+  max-width: 40rem;
+  counter-reset: cover;
+}
+.covers li {
+  counter-increment: cover;
+  display: flex;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.covers li::before {
+  content: counter(cover, decimal-leading-zero);
+  font-weight: 800;
+  color: var(--teal-ink);
+  font-variant-numeric: tabular-nums;
+}
+.statement { font-weight: 700; font-size: 1.125rem; }
+
+.steps { list-style: none; padding: 0; margin: 2rem 0 0; display: grid; gap: 1.5rem; }
+.steps li { border-top: 2px solid var(--teal); padding-top: 1rem; }
+.steps .num {
+  display: block;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--teal);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  font-variant-numeric: tabular-nums;
+}
+.steps h3 { margin-bottom: 0.35rem; }
+.steps p { margin: 0; }
+
+.nots { list-style: none; padding: 0; margin: 1.5rem 0 0; max-width: 40rem; }
+.nots li { padding: 0.6rem 0 0.6rem 1.25rem; border-left: 3px solid var(--teal); margin-bottom: 0.5rem; background: var(--white); }
+
+/* FAQ */
+.faq { max-width: 44rem; margin-top: 1.5rem; }
+.faq details { border-bottom: 1px solid var(--line); }
+.faq summary {
+  cursor: pointer;
+  font-weight: 700;
+  padding: 1rem 0;
+  list-style-position: outside;
+}
+.faq details p { margin: 0 0 1rem; }
+
+/* Final CTA */
+.cta-final h2 { max-width: 22ch; }
+.cta-final .links { margin-top: 1.25rem; }
+.cta-final .links p { margin: 0.4rem 0; }
+
+/* Plain document pages (privacy, thank you, 404) */
+.page { padding: 3rem 0 4rem; }
+.page h1 { font-size: clamp(1.9rem, 6vw, 2.75rem); }
+.page h2 { font-size: 1.375rem; margin-top: 2.25rem; max-width: none; }
+.prose { max-width: 44rem; }
+.prose ul { padding-left: 1.25rem; }
+.prose .btn { margin-top: 1.5rem; }
+
+/* Footer */
+.site-footer {
+  background: var(--slate);
+  color: var(--grey);
+  font-size: 0.875rem;
+  padding: 2rem 0 2.5rem;
+}
+.site-footer p { margin: 0 0 0.5rem; max-width: 52rem; }
+.site-footer a { color: var(--page); }
+.site-footer .footer-links { margin-top: 1rem; }
+
+@media (min-width: 650px) {
+  .btn { display: inline-block; width: auto; }
+  .grid { grid-template-columns: repeat(3, 1fr); }
+  .steps { grid-template-columns: repeat(3, 1fr); }
+  section { padding: 4.5rem 0; }
+  .hero { padding: 5.5rem 0 4.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; transition: none !important; }
+}
