@@ -210,7 +210,7 @@ h3 { font-size: 1.125rem; }
   cursor: pointer;
   font-weight: 700;
   padding: 1rem 0;
-  list-style-position: outside;
+  list-style-position: inside;
 }
 .faq details p { margin: 0 0 1rem; }
 
