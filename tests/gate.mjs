@@ -27,7 +27,7 @@ const DISCLOSURE = new RegExp(
 );
 const CONTACT_LINE = /\(416\) 898-0181 \| (?:\[XRAY_EMAIL\]|[^\s@|]+@[^\s|]+) \| www\.xraymortgages\.ca/;
 const HEADER_TEXT = new RegExp(`^${BROKERAGE} ${ASSOCIATE} X-RAY MORTGAGES$`);
-const BANNER = 'PRINCIPAL BROKER REVIEW · RECA licence pending';
+const BANNER = 'PRINCIPAL BROKER REVIEW \u00B7 RECA licence pending';
 const REQUIRED_PAGES = ['index.html', 'privacy/index.html', 'thank-you/index.html', '404.html'];
 
 // Case-insensitive banned phrases (voice and compliance).
@@ -47,10 +47,10 @@ const FORBIDDEN_EXACT = ['#M', '# '];
 
 // Em dash and its look-alikes: em dash, horizontal bar, two- and three-em
 // dashes, small and vertical em dashes.
-const EM_DASHES = /[—―⸺⸻﹘︱]/g;
+const EM_DASHES = /[\u2014\u2015\u2E3A\u2E3B\uFE58\uFE31]/g;
 const CSS_EM_DASH_ESCAPE = /\\0*(2014|2015|2e3a|2e3b|fe58|fe31)(?![0-9a-f])/gi;
 // En dash (or small en dash) with whitespace on either side reads as an em dash.
-const EN_DASH_AS_EM = /(?:^|\s)[–︲]|[–︲](?:\s|$)/g;
+const EN_DASH_AS_EM = /(?:^|\s)[\u2013\uFE32]|[\u2013\uFE32](?:\s|$)/g;
 
 // Tracking, fonts, scripts and embedded forms are not allowed.
 const EMBED_RULES = [
@@ -77,9 +77,9 @@ const HTML_EXT = /\.html?$/i;
 
 const NAMED = {
   nbsp: ' ', ensp: ' ', emsp: ' ', thinsp: ' ', amp: '&', lt: '<', gt: '>',
-  quot: '"', apos: "'", shy: '', zwj: '', zwnj: '', mdash: '—',
-  ndash: '–', horbar: '―', hyphen: '-', dash: '‐', minus: '−',
-  lbrack: '[', rbrack: ']', lsqb: '[', rsqb: ']', middot: '·', excl: '!',
+  quot: '"', apos: "'", shy: '', zwj: '', zwnj: '', mdash: '\u2014',
+  ndash: '\u2013', horbar: '\u2015', hyphen: '-', dash: '\u2010', minus: '\u2212',
+  lbrack: '[', rbrack: ']', lsqb: '[', rsqb: ']', middot: '\u00B7', excl: '!',
 };
 const cp = (n) => (n > 0 && n <= 0x10ffff ? String.fromCodePoint(n) : '');
 function decodeEntities(s) {
@@ -91,18 +91,18 @@ function decodeEntities(s) {
 
 // Latin look-alikes from Cyrillic and Greek that NFKC leaves alone.
 const CONFUSABLES = {
-  'а': 'a', 'е': 'e', 'о': 'o', 'р': 'p', 'с': 'c',
-  'у': 'y', 'х': 'x', 'і': 'i', 'ј': 'j', 'ѕ': 's',
-  'А': 'A', 'В': 'B', 'Е': 'E', 'К': 'K', 'М': 'M',
-  'Н': 'H', 'О': 'O', 'Р': 'P', 'С': 'C', 'Т': 'T',
-  'Х': 'X', 'ο': 'o', 'Ο': 'O', 'α': 'a', 'Α': 'A',
+  '\u0430': 'a', '\u0435': 'e', '\u043E': 'o', '\u0440': 'p', '\u0441': 'c',
+  '\u0443': 'y', '\u0445': 'x', '\u0456': 'i', '\u0458': 'j', '\u0455': 's',
+  '\u0410': 'A', '\u0412': 'B', '\u0415': 'E', '\u041A': 'K', '\u041C': 'M',
+  '\u041D': 'H', '\u041E': 'O', '\u0420': 'P', '\u0421': 'C', '\u0422': 'T',
+  '\u0425': 'X', '\u03BF': 'o', '\u039F': 'O', '\u03B1': 'a', '\u0391': 'A',
 };
 
 function flatten(s) {
   return decodeEntities(s)
-    .replace(/[­​-‍⁠﻿]/g, '')
+    .replace(/[\u00AD\u200B-\u200D\u2060\uFEFF]/g, '')
     .normalize('NFKC')
-    .replace(/[Α-ωЀ-ӿ]/g, (c) => CONFUSABLES[c] ?? c)
+    .replace(/[\u0391-\u03C9\u0400-\u04FF]/g, (c) => CONFUSABLES[c] ?? c)
     .replace(/\s+/g, ' ');
 }
 const stripComments = (s) => s.replace(/<!--[\s\S]*?-->/g, (m) => m.replace(/[^\n]/g, ' '));
@@ -223,7 +223,7 @@ function textRules(rel, raw, fail, { html }) {
     const hits = findAll(text, p, { ci: true });
     for (const i of hits) fail(`banned phrase "${p}"`, i);
     if (!hits.length) {
-      const re = new RegExp(p.replace(/ /g, '[\\s\\-‐‑]+'), 'i');
+      const re = new RegExp(p.replace(/ /g, '[\\s\\-\u2010\u2011]+'), 'i');
       if (layers.some((l) => re.test(l))) fail(`banned phrase "${p}" (hidden by markup, entities or line breaks)`);
     }
   }
@@ -289,7 +289,7 @@ for (const file of shipped) {
   for (const [re, what] of CSS_EMBED_RULES) if (re.test(styleBlocks)) fail(`not allowed: ${what}`);
 
   const visible = visibleText(raw);
-  const bang = visible.search(/[!！ǃ]/);
+  const bang = visible.search(/[!\uFF01\u01C3]/);
   if (bang !== -1) fail(`exclamation mark in visible text: "...${visible.slice(Math.max(0, bang - 30), bang + 1)}"`);
 
   // Header: brokerage first, then the associate line, then the wordmark, and
