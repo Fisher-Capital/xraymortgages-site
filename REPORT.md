@@ -30,7 +30,7 @@ Every page has these, in order:
 
 ## Gate output (`npm test`, exit code 1, expected)
 
-Refreshed after the gstack review on 29 September 2026; see `REVIEW-GSTACK-2026-09-29.md` for what changed in the gate. `npm test` first runs `tests/gate-selftest.mjs` (47 cases, all passing), then the gate. The compliance rules all pass. The only failures are the unfilled placeholders, and they are listed on their own:
+Refreshed after the gstack review follow-up on 29 September 2026; see `REVIEW-GSTACK-2026-09-29.md` for what changed. `npm test` first runs `tests/gate-selftest.mjs` (57 cases, all passing), then the gate. `npm run gate:go-live` runs the same self-test and then the gate with `--go-live` (see the go-live checklist). The compliance rules all pass. The only failures are the unfilled placeholders, and they are listed on their own:
 
 ```
 Compliance gate: 4 HTML files checked (7 shipped files scanned)
@@ -38,9 +38,9 @@ robots.txt disallows all: yes (noindex required)
 
 Compliance rules: all passed.
 
-PLACEHOLDERS UNFILLED (18), deploy blocked until filled:
+PLACEHOLDERS UNFILLED (19), deploy blocked until filled:
   [PENDING]  x9
-  [XRAY_EMAIL]  x5
+  [XRAY_EMAIL]  x6
   [TALLY_XRAY]  x2
   [CALENDLY_XRAY]  x2
   Locations:
@@ -55,15 +55,16 @@ PLACEHOLDERS UNFILLED (18), deploy blocked until filled:
     index.html:151  [XRAY_EMAIL]
     privacy/index.html:20  [PENDING]
     privacy/index.html:33  [PENDING]
-    privacy/index.html:61  [XRAY_EMAIL]
-    privacy/index.html:71  [PENDING]
-    privacy/index.html:72  [XRAY_EMAIL]
+    privacy/index.html:53  [XRAY_EMAIL]
+    privacy/index.html:62  [XRAY_EMAIL]
+    privacy/index.html:72  [PENDING]
+    privacy/index.html:73  [XRAY_EMAIL]
     thank-you/index.html:20  [PENDING]
     thank-you/index.html:32  [CALENDLY_XRAY]
     thank-you/index.html:41  [PENDING]
     thank-you/index.html:42  [XRAY_EMAIL]
 
-GATE: FAIL (0 compliance, 18 placeholder)
+GATE: FAIL (0 compliance, 19 placeholder)
 ```
 
 I also tested the gate against a deliberately bad file. It caught all of these, and I deleted the file afterwards:
@@ -95,9 +96,11 @@ I also tested the gate against a deliberately bad file. It caught all of these, 
 ## Go-live checklist
 
 1. Fill in `[PENDING]`, `[XRAY_EMAIL]`, `[TALLY_XRAY]` and `[CALENDLY_XRAY]`.
-2. Change `robots.txt` to `Allow: /`.
-3. Remove the noindex meta and the draft banner from every page.
-4. Run `npm test`. It must pass before you deploy.
+2. Make every filled-in email a `mailto:` link whose visible text is exactly the address, for example `<a href="mailto:raymond@example.ca">raymond@example.ca</a>`. That covers the footer contact line on all four pages and the two contact lines on the privacy page.
+3. Change `robots.txt` to `Allow: /`.
+4. Remove the noindex meta and the draft banner from every page.
+5. On the privacy page, delete "Draft for principal broker review." from the last line, and set "Last updated" to the go-live date.
+6. Run `npm run gate:go-live`. It must print `GATE: PASS` before you deploy. It fails on any leftover from steps 1, 3, 4 and 5. It does not check step 2, so check the email links by eye.
 
 ## Commands to add the remote and push (Ray runs these)
 
