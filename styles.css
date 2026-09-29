@@ -32,10 +32,10 @@ a { color: var(--teal-ink); text-underline-offset: 0.18em; }
 a:hover { color: var(--slate); }
 
 :focus-visible {
-  outline: 3px solid var(--teal);
+  outline: 3px solid var(--slate);  /* 16.7:1 on the page, 18:1 on white */
   outline-offset: 3px;
 }
-.on-slate :focus-visible, .banner :focus-visible { outline-color: var(--white); }
+.on-slate :focus-visible, .banner :focus-visible, .site-footer :focus-visible { outline-color: var(--white); }
 
 .wrap {
   width: 100%;
