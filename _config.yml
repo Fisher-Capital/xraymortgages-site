@@ -6,5 +6,6 @@ exclude:
   - README.md
   - REVIEW-GSTACK-2026-09-29.md
   - tests
+  - creative
   - package.json
   - node_modules

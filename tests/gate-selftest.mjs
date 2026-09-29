@@ -93,6 +93,8 @@ const CASES = [
   ['draft banner removed', onIndex((s) => s.replace(/<aside class="banner"[\s\S]*?<\/aside>/, '')), 'compliance'],
   ['encoded placeholder bracket', (d) => PAGES.forEach((f) => edit(f, (s) => FILLED(s).replace('https://tally.so/r/abc', '&#91;TALLY_XRAY&#93;'))(d)), 'placeholder'],
   ['unbracketed placeholder', (d) => PAGES.forEach((f) => edit(f, (s) => FILLED(s).replace('https://calendly.com/x', 'CALENDLY_XRAY'))(d)), 'placeholder'],
+  ['creative/ is not scanned while excluded', add('creative/frames/a1.html', '<p>Fisher \u2014 approved</p>'), 'placeholder'],
+  ['creative/ is scanned if the exclude is removed', (d) => { add('creative/frames/a1.html', '<p>Fisher \u2014 approved</p>')(d); edit('_config.yml', (s) => s.replace('  - creative\n', ''))(d); }, 'compliance'],
   // --go-live
   ['go-live: draft repo fails', () => {}, 'compliance', GO_LIVE],
   ['go-live: filled-in draft still fails', (d) => PAGES.forEach((f) => edit(f, FILLED)(d)), 'compliance', GO_LIVE],
