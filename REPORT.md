@@ -30,10 +30,10 @@ Every page has these, in order:
 
 ## Gate output (`npm test`, exit code 1, expected)
 
-The compliance rules all pass. The only failures are the unfilled placeholders, and they are listed on their own:
+Refreshed after the gstack review on 29 September 2026; see `REVIEW-GSTACK-2026-09-29.md` for what changed in the gate. `npm test` first runs `tests/gate-selftest.mjs` (47 cases, all passing), then the gate. The compliance rules all pass. The only failures are the unfilled placeholders, and they are listed on their own:
 
 ```
-Compliance gate: 4 HTML files checked
+Compliance gate: 4 HTML files checked (7 shipped files scanned)
 robots.txt disallows all: yes (noindex required)
 
 Compliance rules: all passed.
@@ -44,24 +44,24 @@ PLACEHOLDERS UNFILLED (18), deploy blocked until filled:
   [TALLY_XRAY]  x2
   [CALENDLY_XRAY]  x2
   Locations:
-    404.html:19  [PENDING]
-    404.html:37  [PENDING]
-    404.html:38  [XRAY_EMAIL]
-    index.html:19  [PENDING]
-    index.html:30  [TALLY_XRAY]
-    index.html:138  [TALLY_XRAY]
-    index.html:140  [CALENDLY_XRAY]
-    index.html:149  [PENDING]
-    index.html:150  [XRAY_EMAIL]
-    privacy/index.html:19  [PENDING]
-    privacy/index.html:32  [PENDING]
-    privacy/index.html:60  [XRAY_EMAIL]
-    privacy/index.html:70  [PENDING]
-    privacy/index.html:71  [XRAY_EMAIL]
-    thank-you/index.html:19  [PENDING]
-    thank-you/index.html:31  [CALENDLY_XRAY]
-    thank-you/index.html:40  [PENDING]
-    thank-you/index.html:41  [XRAY_EMAIL]
+    404.html:20  [PENDING]
+    404.html:38  [PENDING]
+    404.html:39  [XRAY_EMAIL]
+    index.html:20  [PENDING]
+    index.html:31  [TALLY_XRAY]
+    index.html:139  [TALLY_XRAY]
+    index.html:141  [CALENDLY_XRAY]
+    index.html:150  [PENDING]
+    index.html:151  [XRAY_EMAIL]
+    privacy/index.html:20  [PENDING]
+    privacy/index.html:33  [PENDING]
+    privacy/index.html:61  [XRAY_EMAIL]
+    privacy/index.html:71  [PENDING]
+    privacy/index.html:72  [XRAY_EMAIL]
+    thank-you/index.html:20  [PENDING]
+    thank-you/index.html:32  [CALENDLY_XRAY]
+    thank-you/index.html:41  [PENDING]
+    thank-you/index.html:42  [XRAY_EMAIL]
 
 GATE: FAIL (0 compliance, 18 placeholder)
 ```
