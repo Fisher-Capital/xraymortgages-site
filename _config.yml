@@ -1,0 +1,7 @@
+# GitHub Pages: keep repo tooling and notes out of the published site.
+exclude:
+  - REPORT.md
+  - README.md
+  - tests
+  - package.json
+  - node_modules

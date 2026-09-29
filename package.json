@@ -1,0 +1,9 @@
+{
+  "name": "xraymortgages-site",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Static landing site for X-Ray Mortgages (Alberta).",
+  "scripts": {
+    "test": "node tests/gate.mjs"
+  }
+}
