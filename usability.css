@@ -7,3 +7,6 @@
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 @media print{.site-header,.mobile-menu{display:none}.report-answers{font-size:12px}.report-status{background:none;padding:0}}
+/* Direct calling should not require a sample checkup or another contact page. */
+.header-call{display:inline-flex;align-items:center;justify-content:center;min-height:44px;font-size:15px;font-weight:600;white-space:nowrap}
+@media(max-width:760px){.site-header .header-call{grid-column:1/-1;order:3;justify-content:flex-start;border-top:1px solid var(--line);margin-top:6px}.site-header .mobile-menu{order:2}}
