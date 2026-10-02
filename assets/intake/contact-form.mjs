@@ -1,4 +1,4 @@
-import {createDelivery,deliveryMessage} from './delivery.mjs';
+import {createDelivery,deliveryMessage} from './delivery.mjs?v=application-1';
 import {blankContact,validateContact,buildContact,PURPOSES} from './quick-model.mjs';
 import {contextFrom} from './model.mjs';
 const root=document.querySelector('#campaign-form,#guided-intake');
@@ -13,7 +13,7 @@ const provinces=live?(document.body.dataset.provinces||'Ontario').split(',').fil
 // Endpoint is a build setting, never a visitor-controlled URL parameter.
 const delivery=live&&endpoint==='https://fishercapital-chatbot.vercel.app/api/intake'?createDelivery(endpoint):null;
 if(delivery)delivery.prepare().catch(()=>{});
-const answers=blankContact();let step=0,complete=false,errors={},sending=false,sendError='',reference='';
+const answers=blankContact();let step=0,complete=false,errors={},sending=false,sendError='',reference='',application=null;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function input(k,label,type='text'){return `<div class="field"><label for="${k}">${label}</label><input id="${k}" data-field="${k}" type="${type}" autocomplete="${{firstName:'given-name',lastName:'family-name',phone:'tel',email:'email'}[k]}" maxlength="${{firstName:80,lastName:80,phone:30,email:254}[k]}" value="${esc(answers[k])}" aria-invalid="${!!errors[k]}" aria-describedby="${k}-error"${type==='tel'?' inputmode="tel"':''}><p class="error" id="${k}-error">${esc(errors[k]||'')}</p></div>`;}
 function render(focus=false){
@@ -24,16 +24,17 @@ function render(focus=false){
  if(focus){root.querySelector('#form-title').focus({preventScroll:true});root.scrollIntoView({block:'start',behavior:'instant'});}
 }
 root.addEventListener('input',e=>{if(sending)return;if(sendError)delivery?.reset();sendError='';const k=e.target.dataset.field;if(Object.hasOwn(answers,k))answers[k]=e.target.type==='checkbox'?e.target.checked:e.target.value;});
-root.addEventListener('click',e=>{if(sending)return;sendError='';const action=e.target.closest('[data-action]')?.dataset.action;if(action==='back'){step=Math.max(0,step-1);errors={};render(true);}if(action==='restart'){delivery?.reset();reference='';Object.assign(answers,blankContact());step=0;complete=false;errors={};render(true);}});
+root.addEventListener('click',e=>{if(sending)return;sendError='';const action=e.target.closest('[data-action]')?.dataset.action;if(action==='back'){step=Math.max(0,step-1);errors={};render(true);}if(action==='restart'){delivery?.reset();reference='';application=null;Object.assign(answers,blankContact());step=0;complete=false;errors={};render(true);}});
 root.addEventListener('submit',async e=>{e.preventDefault();if(sending)return;sendError='';errors=validateContact(answers,step);if(Object.keys(errors).length){render();document.getElementById(Object.keys(errors)[0])?.focus();return;}
  if(step<2){step++;render(true);return;}
  const draft=buildContact(answers,document.body.dataset.brand,context);
  if(live){
   sending=true;render();
-  try{if(!delivery)throw new Error('temporarily_unavailable');reference=await delivery.submit(draft);}
+  try{if(!delivery)throw new Error('temporarily_unavailable');reference=await delivery.submit(draft);application=delivery.application();}
   catch(error){sendError=deliveryMessage(error.message);sending=false;render();root.querySelector('.error-summary')?.scrollIntoView({block:'nearest'});return;}
   sending=false;
  }
  complete=true;Object.assign(answers,blankContact());render(true);
+ if(application){const destination=application.url;setTimeout(()=>{if(complete&&application?.url===destination)location.assign(destination);},900);}
 });
 render();
